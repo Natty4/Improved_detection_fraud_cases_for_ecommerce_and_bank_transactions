@@ -116,5 +116,5 @@ Key fraud indicators:
 
     High-risk countries
 
-###### Interested in implementing this kind of solution? Contact at [Email](mailto:natty7kt@gmail.com).
+###### Interested in implementing this kind of solution? Contact at [Email](mailto:natty7kt@gmail.com).💙
 ---
