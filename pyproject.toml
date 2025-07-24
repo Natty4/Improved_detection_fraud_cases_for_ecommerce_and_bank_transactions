@@ -1,0 +1,24 @@
+[build-system]
+
+requires = ["setuptools>=45", "wheel"]
+
+build-backend = "setuptools.build_meta"
+
+
+
+[project]
+
+name = "Improved_detection_fraud_cases_for_ecommerce_and_bank_transactions"
+
+version = "0.1.0"
+
+description = ""
+
+requires-python = ">=3.10"
+
+
+
+[tool.setuptools.packages.find]
+
+where = ["src"]
+
