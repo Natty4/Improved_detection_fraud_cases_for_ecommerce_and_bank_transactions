@@ -1,5 +1,6 @@
-
-import sys, pathlib
+import sys
+import pathlib
+import joblib  # Using joblib since that's what you used to save models
 ROOT_DIR = pathlib.Path(__file__).resolve().parents[1]
 SRC_DIR = ROOT_DIR
 sys.path.append(str(SRC_DIR))
@@ -19,33 +20,48 @@ def main():
     
     try:
         # 1. Process e-commerce data
-        print("\n🔧 Processing e-commerce data...")
+        print("\n🛒 Processing e-commerce data...")
         ecom_data = data_processor.process_ecommerce_data()
         
         # 2. Process credit card data
         print("\n💳 Processing credit card data...")
         credit_data = data_processor.process_credit_data()
         
-        # 3. Train models
+        # 3. Train and save models
         print("\n🤖 Training models...")
         ecom_models = model_trainer.train_ecommerce_models(ecom_data)
         credit_models = model_trainer.train_credit_models(credit_data)
         
-        # 4. Generate explanations
+        # 4. Explain using saved models
         print("\n🔍 Generating explanations...")
+        
+        # Option 1: Use the in-memory models from the training results
         if 'xgb' in ecom_models.get('models', {}):
             print("\nE-commerce Model Explanation:")
-            if not explainer.explain_ecommerce(ecom_models['models']['xgb'], ecom_data):
-                print("Failed to generate e-commerce explanations")
+            explainer.explain_ecommerce(model=ecom_models['models']['xgb'], data=ecom_data)
         else:
             print("No XGBoost model available for e-commerce data")
             
         if 'xgb' in credit_models.get('models', {}):
             print("\nCredit Card Model Explanation:")
-            if not explainer.explain_credit(credit_models['models']['xgb'], credit_data):
-                print("Failed to generate credit card explanations")
+            explainer.explain_credit(model=credit_models['models']['xgb'], data=credit_data)
         else:
             print("No XGBoost model available for credit card data")
+        
+        # Option 2
+        if 'model_paths' in ecom_models:
+            try:
+                ecom_model = joblib.load(ecom_models['model_paths']['xgb'])
+                explainer.explain_ecommerce(model=ecom_model, data=ecom_data)
+            except Exception as e:
+                print(f"Failed to load/explain e-commerce model: {str(e)}")
+        
+        if 'model_paths' in credit_models:
+            try:
+                credit_model = joblib.load(credit_models['model_paths']['xgb'])
+                explainer.explain_credit(model=credit_model, data=credit_data)
+            except Exception as e:
+                print(f"Failed to load/explain credit model: {str(e)}")
         
         print("\n✅ Pipeline completed successfully!")
         

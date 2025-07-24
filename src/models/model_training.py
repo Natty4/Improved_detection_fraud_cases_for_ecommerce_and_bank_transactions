@@ -1,3 +1,6 @@
+from pathlib import Path
+import joblib
+from datetime import datetime
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
@@ -14,10 +17,10 @@ logger = logging.getLogger(__name__)
 
 class ModelTrainer:
     """Handles model training and evaluation."""
-    
-
-
-    # Update the train_ecommerce_models method:
+    def __init__(self):
+        self.model_dir = Path("outputs/models")
+        self.model_dir.mkdir(exist_ok=True)
+        
     def train_ecommerce_models(self, data):
         """Train models on e-commerce data."""
         try:
@@ -53,10 +56,19 @@ class ModelTrainer:
                 'test_data': (X_test, y_test)
             }
             
+            # Save models
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            joblib.dump(logreg, self.model_dir / f"credit_logreg_{timestamp}.pkl")
+            joblib.dump(xgb, self.model_dir / f"credit_xgb_{timestamp}.pkl")
+            
             return {
                 'models': {'logreg': logreg, 'xgb': xgb},
-                'results': results
+                'results': results,
+                'model_paths': {
+                    'logreg': str(self.model_dir / f"credit_logreg_{timestamp}.pkl"),
+                    'xgb': str(self.model_dir / f"credit_xgb_{timestamp}.pkl")
                 }
+            }
             
         except Exception as e:
             logger.error(f"Error training e-commerce models: {str(e)}")

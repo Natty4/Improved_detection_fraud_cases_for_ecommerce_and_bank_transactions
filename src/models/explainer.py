@@ -106,3 +106,4 @@ class SHAPExplainer:
         except Exception as e:
             logger.error(f"Error getting feature names: {str(e)}")
             return []
+        
