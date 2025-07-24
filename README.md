@@ -103,7 +103,7 @@ Deployment Architecture
         False Positive Rate	0.3%
 🤖 Model Interpretability
 
-![shap_summary](outputs/shap_plots/ecom_shap_summary.png
+![shap_summary](outputs/shap_plots/ecom_shap_summary.png)
 
 Key fraud indicators:
 
